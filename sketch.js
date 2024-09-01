@@ -9,6 +9,7 @@ let shootButton
 let vx = 0 // Horizontal velocity
 let vy = 0 // Vertical velocity
 let bounceFactor = 0.7 // Factor to reduce velocity after bounce
+let enableBounce = true // Flag to enable or disable bounce
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
@@ -34,9 +35,17 @@ function setup() {
   createElement("label", "Launch Angle (°)").position(width - 340, 50)
   createElement("label", "Initial Height (m)").position(width - 340, 80)
 
+  // Checkbox for enabling or disabling bounce
+  createElement("label", "Enable Bounce").position(width - 340, 110)
+  let bounceCheckbox = createCheckbox("", true)
+  bounceCheckbox.position(width - 200, 110)
+  bounceCheckbox.changed(() => {
+    enableBounce = bounceCheckbox.checked()
+  })
+
   // Shoot button
   shootButton = createButton("Shoot")
-  shootButton.position(width - 200, 110)
+  shootButton.position(width - 200, 140)
   shootButton.mousePressed(shoot)
 
   updateValues()
@@ -65,10 +74,18 @@ function draw() {
   y += vy * 0.1 // Update vertical position
 
   // Check for bounce
-  if (y < 0) {
-    y = 0 // Prevent the ball from going below the ground
-    vy = -vy * bounceFactor // Reverse and reduce vertical velocity
-    vx *= bounceFactor // Reduce horizontal velocity
+  if (enableBounce == true) {
+    if (y < 0) {
+      y = 0 // Prevent the ball from going below the ground
+      vy = -vy * bounceFactor // Reverse and reduce vertical velocity
+      vx *= bounceFactor // Reduce horizontal velocity
+    }
+  } else {
+    if (y < 0) {
+      y = 0
+      vy = 0
+      vx = 0
+    }
   }
 
   // Convert y to canvas coordinates
