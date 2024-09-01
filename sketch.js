@@ -28,7 +28,7 @@ function setup() {
   // Labels for inputs
   createElement("label", "Initial Velocity (m/s)").position(100, 20)
   createElement("label", "Launch Angle (°)").position(100, 50)
-  createElement("label", "Initial Height (m)").position(100, 80)
+  createElement("label", "Initial height (m)").position(100, 80)
 
   updateValues()
 }
