@@ -6,6 +6,9 @@ let gravity = 9.8 // Acceleration due to gravity (m/s^2)
 let x = 0,
   y = 0
 let shootButton
+let vx = 0 // Horizontal velocity
+let vy = 0 // Vertical velocity
+let bounceFactor = 0.7 // Factor to reduce velocity after bounce
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
@@ -57,10 +60,16 @@ function draw() {
   }
 
   // Calculate the projectile's position
-  x = initialVelocity * cos(radians(angle)) * time
-  y =
-    initialHeight +
-    (initialVelocity * sin(radians(angle)) * time - 0.5 * gravity * time * time)
+  x += vx * 0.1 // Update horizontal position
+  vy -= gravity * 0.1 // Update vertical velocity
+  y += vy * 0.1 // Update vertical position
+
+  // Check for bounce
+  if (y < 0) {
+    y = 0 // Prevent the ball from going below the ground
+    vy = -vy * bounceFactor // Reverse and reduce vertical velocity
+    vx *= bounceFactor // Reduce horizontal velocity
+  }
 
   // Convert y to canvas coordinates
   let canvasY = height - 20 - y * 10
@@ -74,11 +83,6 @@ function draw() {
 
   // Update time
   time += 0.1
-
-  // Stop the projectile if it hits the ground
-  if (canvasY >= height - 20 || isNaN(canvasY)) {
-    noLoop()
-  }
 
   // Display the distance traveled on the x-axis
   fill(0)
@@ -94,6 +98,11 @@ function updateValues() {
 }
 
 function shoot() {
+  // Reset x, y, vx, and vy when shoot button is pressed
+  x = 0
+  y = initialHeight
+  vx = initialVelocity * cos(radians(angle))
+  vy = initialVelocity * sin(radians(angle))
   time = 0
   loop() // Start the simulation when the shoot button is pressed
 }
