@@ -10,6 +10,7 @@ let vx = 0 // Horizontal velocity
 let vy = 0 // Vertical velocity
 let bounceFactor = 0.7 // Factor to reduce velocity after bounce
 let enableBounce = true // Flag to enable or disable bounce
+let maxheight = 0.0 //Maxheight
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
@@ -105,6 +106,12 @@ function draw() {
   fill(0)
   textSize(14)
   text(`Distance: ${x.toFixed(2)} m`, 20, height - 5) // Display distance at the bottom of the canvas
+
+  // Display the max-height traveled on the y-axis
+  fill(0)
+  textSize(14)
+  if (y > maxheight) maxheight = y
+  text(`Height: ${maxheight.toFixed(2)} m`, 200, height - 5)
 }
 
 function updateValues() {
@@ -115,7 +122,8 @@ function updateValues() {
 }
 
 function shoot() {
-  // Reset x, y, vx, and vy when shoot button is pressed
+  // Reset x, y, vx,maxheight and vy when shoot button is pressed
+  maxheight = 0
   x = 0
   y = initialHeight
   vx = initialVelocity * cos(radians(angle))
