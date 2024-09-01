@@ -82,7 +82,7 @@ function draw() {
       vx *= bounceFactor // Reduce horizontal velocity
     }
   } else {
-    if (y < 0) {
+    if (y == 0 || y < 0) {
       y = 0
       vy = 0
       vx = 0
@@ -100,7 +100,7 @@ function draw() {
   }
 
   // Update time
-  time += 0.1
+  if (y > 0) time += 0.1
 
   // Display the distance traveled on the x-axis
   fill(0)
@@ -108,10 +108,11 @@ function draw() {
   text(`Distance: ${x.toFixed(2)} m`, 20, height - 5) // Display distance at the bottom of the canvas
 
   // Display the max-height traveled on the y-axis
-  fill(0)
-  textSize(14)
   if (y > maxheight) maxheight = y
-  text(`Height: ${maxheight.toFixed(2)} m`, 200, height - 5)
+  text(`Maximum Height: ${maxheight.toFixed(2)} m`, 200, height - 5)
+
+  // Display the time elapsed
+  text(`Time of Flight: ${time.toFixed(2)} s`, 400, height - 5)
 }
 
 function updateValues() {
