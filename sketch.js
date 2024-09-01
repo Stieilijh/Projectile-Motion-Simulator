@@ -26,7 +26,7 @@ function setup() {
   angleInput.size(60)
   angleInput.input(updateValues)
 
-  heightInput = createInput("20") // Default initial height in meters
+  heightInput = createInput("0") // Default initial height in meters
   heightInput.position(width - 200, 80)
   heightInput.size(60)
   heightInput.input(updateValues)
