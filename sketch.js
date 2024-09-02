@@ -1,4 +1,6 @@
 // Variables for simulation
+let bounceSound //Declare the sound variable at the top
+let soundOnce = 1
 let velocityInput, angleInput, heightInput
 let initialVelocity, angle, initialHeight
 let time = 0
@@ -17,8 +19,11 @@ let dragCoefficient = 0.47 // dimensionless (approximate drag coefficient for a 
 let ballWidth = 0.1
 let ballHeight = 0.1
 let projectileArea = 3.14 * ballHeight * ballWidth
-let ballPath = []
-ballPath.push(createVector(0, 0)) // Store the ball's previous positions
+let ballPath = [] // Store the ball's previous positions
+
+function preload() {
+  bounceSound = loadSound("Bounce.mp3")
+}
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
@@ -65,6 +70,7 @@ function setup() {
   shootButton.mousePressed(shoot)
 
   updateValues()
+  ballPath.push(createVector(0, 0)) //  add (0,0) to ball path.
   noLoop() // Don't start the simulation until the shoot button is pressed
 }
 
@@ -109,9 +115,9 @@ function draw() {
     if (y < 0) {
       y = 0 // Prevent the ball from going below the ground
       vy = -vy * bounceFactor // Reverse and reduce vertical velocity
+      if (!(vy < 0.7 && y == 0.0)) bounceSound.play() // Play the sound effect
     }
-    console.log(y)
-    if (vy < 0.5 && y == 0.0) {
+    if (vy < 0.7 && y == 0.0) {
       vx = 0 //Stop horizontal velocity when the ball stops bouncing
       vy = 0
       y = 0
@@ -122,6 +128,10 @@ function draw() {
       y = 0
       vy = 0
       vx = 0
+      if (soundOnce == 1) {
+        soundOnce = 0
+        bounceSound.play() // Play the sound effect
+      }
     }
   }
   // Check for air resistance
@@ -152,7 +162,6 @@ function draw() {
     fill(0)
     ellipse(x, canvasY, ballHeight * 100, ballWidth * 100)
   }
-
   // Update time
   if (y > 0) time += 0.1
 
@@ -187,5 +196,6 @@ function shoot() {
   time = 0
   ballPath = []
   ballPath.push(createVector(0, 0))
+  soundOnce = 1
   loop() // Start the simulation when the shoot button is pressed
 }
