@@ -17,7 +17,8 @@ let dragCoefficient = 0.47 // dimensionless (approximate drag coefficient for a 
 let ballWidth = 0.1
 let ballHeight = 0.1
 let projectileArea = 3.14 * ballHeight * ballWidth
-let ballPath = [] // Store the ball's previous positions
+let ballPath = []
+ballPath.push(createVector(0, 0)) // Store the ball's previous positions
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
@@ -185,5 +186,6 @@ function shoot() {
   vy = initialVelocity * sin(radians(angle))
   time = 0
   ballPath = []
+  ballPath.push(createVector(0, 0))
   loop() // Start the simulation when the shoot button is pressed
 }
