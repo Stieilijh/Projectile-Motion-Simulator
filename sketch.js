@@ -10,24 +10,31 @@ let vx = 0 // Horizontal velocity
 let vy = 0 // Vertical velocity
 let bounceFactor = 0.7 // Factor to reduce velocity after bounce
 let enableBounce = true // Flag to enable or disable bounce
-let maxheight = 0.0 //Maxheight
+let enableAirResis = false // Flag to enable or disable Air Resistance
+let maxheight = 0.0 //Store Maxheight in this variable
+let airDensity = 1.225 // kg/m^3 (approximate air density at sea level)
+let dragCoefficient = 0.47 // dimensionless (approximate drag coefficient for a sphere)
+let ballWidth = 0.1
+let ballHeight = 0.1
+let projectileArea = 3.14 * ballHeight * ballWidth
+let ballPath = [] // Store the ball's previous positions
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight)
 
   // Inputs for velocity, angle, and height
   velocityInput = createInput("50") // Default initial velocity in m/s
-  velocityInput.position(width - 200, 20)
+  velocityInput.position(width - 180, 20)
   velocityInput.size(60)
   velocityInput.input(updateValues)
 
   angleInput = createInput("45") // Default launch angle in degrees
-  angleInput.position(width - 200, 50)
+  angleInput.position(width - 180, 50)
   angleInput.size(60)
   angleInput.input(updateValues)
 
   heightInput = createInput("0") // Default initial height in meters
-  heightInput.position(width - 200, 80)
+  heightInput.position(width - 180, 80)
   heightInput.size(60)
   heightInput.input(updateValues)
 
@@ -39,14 +46,21 @@ function setup() {
   // Checkbox for enabling or disabling bounce
   createElement("label", "Enable Bounce").position(width - 340, 110)
   let bounceCheckbox = createCheckbox("", true)
-  bounceCheckbox.position(width - 200, 110)
+  bounceCheckbox.position(width - 180, 110)
   bounceCheckbox.changed(() => {
     enableBounce = bounceCheckbox.checked()
   })
 
+  //Checkbox for enabling or disabling air resistance
+  createElement("label", "Quadratic Drag").position(width - 340, 140)
+  let AirResisCheckbox = createCheckbox("", false)
+  AirResisCheckbox.position(width - 180, 140)
+  AirResisCheckbox.changed(() => {
+    enableAirResis = AirResisCheckbox.checked()
+  })
   // Shoot button
   shootButton = createButton("Shoot")
-  shootButton.position(width - 200, 140)
+  shootButton.position(width - 180, 170)
   shootButton.mousePressed(shoot)
 
   updateValues()
@@ -70,25 +84,64 @@ function draw() {
   }
 
   // Calculate the projectile's position
-  x += vx * 0.1 // Update horizontal position
+  if (!isNaN(vx)) {
+    x += vx * 0.1
+  } // Update horizontal position
   vy -= gravity * 0.1 // Update vertical velocity
   y += vy * 0.1 // Update vertical position
 
+  // Store the current position in the ballPath array
+  ballPath.push(createVector(x, y))
+
+  // Draw the ball path
+  noFill()
+  stroke(0)
+  beginShape()
+  for (let i = 0; i < ballPath.length; i++) {
+    let canvasY = height - 20 - ballPath[i].y * 10
+    if (canvasY > height - 20) canvasY = height - 20
+    vertex(ballPath[i].x, canvasY)
+  }
+  endShape()
   // Check for bounce
   if (enableBounce == true) {
     if (y < 0) {
       y = 0 // Prevent the ball from going below the ground
       vy = -vy * bounceFactor // Reverse and reduce vertical velocity
-      vx *= bounceFactor // Reduce horizontal velocity
+    }
+    console.log(y)
+    if (vy < 0.5 && y == 0.0) {
+      vx = 0 //Stop horizontal velocity when the ball stops bouncing
+      vy = 0
+      y = 0
     }
   } else {
-    if (y == 0 || y < 0) {
+    if (y < 0) {
+      //if bounce off then make all velocities 0
       y = 0
       vy = 0
       vx = 0
     }
   }
+  // Check for air resistance
+  if (enableAirResis) {
+    if (!(vy < 0.5 && y == 0.0)) {
+      let velocityMagnitude = Math.sqrt(vx * vx + vy * vy)
+      let dragForce =
+        0.5 *
+        airDensity *
+        projectileArea *
+        dragCoefficient *
+        velocityMagnitude *
+        velocityMagnitude
 
+      let dragForceX = (-dragForce * vx) / velocityMagnitude
+      let dragForceY = (-dragForce * vy) / velocityMagnitude
+
+      vx += dragForceX * 0.1
+      vy += dragForceY * 0.1
+    }
+  }
   // Convert y to canvas coordinates
   let canvasY = height - 20 - y * 10
 
@@ -96,7 +149,7 @@ function draw() {
   if (!isNaN(canvasY) && canvasY <= height - 20) {
     // Draw the projectile
     fill(0)
-    ellipse(x, canvasY, 10, 10)
+    ellipse(x, canvasY, ballHeight * 100, ballWidth * 100)
   }
 
   // Update time
@@ -105,7 +158,7 @@ function draw() {
   // Display the distance traveled on the x-axis
   fill(0)
   textSize(14)
-  text(`Distance: ${x.toFixed(2)} m`, 20, height - 5) // Display distance at the bottom of the canvas
+  text(`Distance: ${Math.max(0, x).toFixed(2)} m`, 20, height - 5) // Display distance at the bottom of the canvas
 
   // Display the max-height traveled on the y-axis
   if (y > maxheight) maxheight = y
@@ -118,7 +171,8 @@ function draw() {
 function updateValues() {
   // Update values when input changes
   initialVelocity = float(velocityInput.value())
-  angle = float(angleInput.value())
+  if (angleInput.value() >= 90) angle = 90
+  else angle = float(angleInput.value())
   initialHeight = float(heightInput.value())
 }
 
@@ -130,5 +184,6 @@ function shoot() {
   vx = initialVelocity * cos(radians(angle))
   vy = initialVelocity * sin(radians(angle))
   time = 0
+  ballPath = []
   loop() // Start the simulation when the shoot button is pressed
 }
