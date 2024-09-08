@@ -12,11 +12,11 @@ This project simulates projectile motion, incorporating physics concepts such as
 
 ## Getting Started
 
-To try the simulation, [click here](https://stieilijh.github.io/physics-projects-with-p5js/).
+To try the simulation, [click here](https://stieilijh.github.io/Projectile-Motion-Simulator/).
 
 ## Usage
 
-1. Visit the [link](https://stieilijh.github.io/physics-projects-with-p5js/) to access the simulation.
+1. Visit the [link](https://stieilijh.github.io/Projectile-Motion-Simulator/) to access the simulation.
 2. Adjust the initial velocity, launch angle, and height using the input fields.
 3. Toggle the "Enable Bounce" and "Quadratic Drag" checkboxes to enable or disable the respective effects.
 4. Click the "Shoot" button to start the simulation.
