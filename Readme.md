@@ -30,7 +30,7 @@ The motion of the projectile is calculated using the following physics principle
 
 - **Horizontal Motion:**
 
-x = x₀ + vₓ \* t
+  x = x₀ + vₓ \* t
 
 - **Vertical Motion with Gravity:**
 
