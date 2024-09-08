@@ -34,7 +34,7 @@ The motion of the projectile is calculated using the following physics principle
 
 - **Vertical Motion with Gravity:**
 
-  y = y₀ + vᵧ _ t - (1/2) _ g \* t²
+  y = y₀ + vᵧ \* t - (1/2) \* g \* t²
 
 - **Velocity Updates:**
 
@@ -48,7 +48,7 @@ When the projectile hits the ground (`y = 0`), its vertical velocity `vy` is rev
 
 If air resistance is enabled, a drag force proportional to the square of the velocity is applied:
 
-Drag Force = 0.5 _ airDensity _ dragCoefficient _ projectileArea _ velocityMagnitude²
+Drag Force = 0.5 \*airDensity \*dragCoefficient \* projectileArea \* velocityMagnitude²
 
 This force is decomposed into x and y components and subtracted from the respective velocities.
 
