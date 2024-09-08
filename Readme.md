@@ -29,19 +29,16 @@ To try the simulation, [click here](https://stieilijh.github.io/Projectile-Motio
 The motion of the projectile is calculated using the following physics principles:
 
 - **Horizontal Motion:**
-  \[
-  x = x_0 + v_x \cdot t
-  \]
+
+x = x₀ + vₓ \* t
 
 - **Vertical Motion with Gravity:**
-  \[
-  y = y_0 + v_y \cdot t - \frac{1}{2} g t^2
-  \]
+
+  y = y₀ + vᵧ _ t - (1/2) _ g \* t²
 
 - **Velocity Updates:**
-  \[
-  v_y = v_y - g \cdot \Delta t
-  \]
+
+  vᵧ = vᵧ - g \* Δt
 
 ### Bounce Effect
 
@@ -51,9 +48,7 @@ When the projectile hits the ground (`y = 0`), its vertical velocity `vy` is rev
 
 If air resistance is enabled, a drag force proportional to the square of the velocity is applied:
 
-\[
-\text{Drag Force} = 0.5 \times \text{airDensity} \times \text{dragCoefficient} \times \text{projectileArea} \times \text{velocityMagnitude}^2
-\]
+Drag Force = 0.5 _ airDensity _ dragCoefficient _ projectileArea _ velocityMagnitude²
 
 This force is decomposed into x and y components and subtracted from the respective velocities.
 
